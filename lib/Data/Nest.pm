@@ -2,8 +2,9 @@ package Data::Nest;
 use 5.008005;
 use strict;
 use warnings;
+use Data::Dumper;
 
-our $VERSION = "0.01";
+our $VERSION = "0.02";
 
 require Exporter;
 our @ISA = qw/Exporter/;
@@ -15,16 +16,16 @@ sub new {
 
     return bless {
         keys => [],
+        rollups => [],
         tree => {},
         delimiter => $opt{delimiter} || "_____",
     }, $class;
 }
 
 sub nest {
-    my $data = shift;
     my %opt = @_;
 
-    my $self = new Data::Nest($data, %opt);
+    my $self = new Data::Nest(%opt);
     $self;
 }
 
@@ -36,11 +37,19 @@ sub key {
     $self;
 }
 
+sub rollup {
+    my $self = shift;
+    my ($name, $func) = @_;
+
+    push @{$self->{rollups}}, {name => $name, func => $func};
+    $self;
+}
+
 sub _entries {
     my $self = shift;
     my $array = shift;
     my $depth = shift;
-    return $array if $depth >= scalar @{$self->{keys}};
+    return $array if($depth >= scalar @{$self->{keys}});
     my $key = $self->{keys}[$depth];
 
     my $branch = [];
@@ -53,15 +62,25 @@ sub _entries {
     }
 
     foreach my $k (sort keys %map){
-        push @$branch, {key => $k, values => $self->_entries($map{$k}, $depth+1)};
+        my $values = $self->_entries($map{$k}, $depth+1);
+        my $obj = {
+            key => $k,
+            values => $values,
+        };
+        if($depth + 1 >= scalar @{$self->{keys}}){
+            foreach my $roll (@{$self->{rollups}}){
+                $obj->{$roll->{name}} = $roll->{func}(@$values);
+            }
+        }
+        push @$branch, $obj;
     }
+
     $branch;
 }
 
 sub entries {
     my $self = shift;
     my $data = shift;
-
     $self->_entries($data, 0);
 }
 

@@ -1,6 +1,6 @@
 #!perl -T
-
-use Test::More tests;
+use strict;
+use Test::More;
 use Data::Dumper;
 use Data::Nest;
 

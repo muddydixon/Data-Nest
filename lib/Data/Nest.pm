@@ -24,7 +24,7 @@ sub nest {
     my $data = shift;
     my %opt = @_;
 
-    my $self = new List::Utils::Nest($data, %opt);
+    my $self = new Data::Nest($data, %opt);
     $self;
 }
 

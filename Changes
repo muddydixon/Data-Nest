@@ -2,6 +2,12 @@ Revision history for Perl extension Data-Nest
 
 {{$NEXT}}
 
+0.02 2013-09-09T07:00:17Z
+
+0.02 2013-09-09T07:53:48Z
+
+    - add rollup
+
 0.01 2013-09-09T05:53:48Z
 
     - original version

@@ -19,6 +19,12 @@ my $sample = [
 
 my $entries;
 
+$entries = new Data::Nest()->key('userid')->keyname("hoge");
+is($entries->{keyname}, "hoge");
+
+$entries = new Data::Nest()->key('userid')->valname("fuga");
+is($entries->{valname}, "fuga");
+
 $entries = new Data::Nest()->key('userid')->entries($sample);
 is(4, scalar @{$entries});
 
@@ -42,6 +48,32 @@ is(3, $entries->[2]{key});
 is(2, scalar @{$entries->[2]{values}});
 is(4, $entries->[3]{key});
 is(1, scalar @{$entries->[3]{values}});
+
+$entries = new Data::Nest()->key('userid')
+    ->keyname('hoge')->valname('fuga')->entries($sample);
+is(4, scalar @{$entries});
+
+is(1, $entries->[0]{hoge});
+is(4, scalar @{$entries->[0]{fuga}});
+is(2, $entries->[1]{hoge});
+is(3, scalar @{$entries->[1]{fuga}});
+is(3, $entries->[2]{hoge});
+is(2, scalar @{$entries->[2]{fuga}});
+is(4, $entries->[3]{hoge});
+is(1, scalar @{$entries->[3]{fuga}});
+
+$entries = nest()->key('userid')
+    ->keyname('hoge')->valname('fuga')->entries($sample);
+is(4, scalar @{$entries});
+
+is(1, $entries->[0]{hoge});
+is(4, scalar @{$entries->[0]{fuga}});
+is(2, $entries->[1]{hoge});
+is(3, scalar @{$entries->[1]{fuga}});
+is(3, $entries->[2]{hoge});
+is(2, scalar @{$entries->[2]{fuga}});
+is(4, $entries->[3]{hoge});
+is(1, scalar @{$entries->[3]{fuga}});
 
 $entries = nest()->key('userid', 'itemid')->entries($sample);
 is(8, scalar @{$entries});
@@ -171,6 +203,5 @@ is($entries->[3]{values}[0]{key}, 2);
 is($entries->[3]{values}[0]{sumsq}, 9);
 is($entries->[3]{values}[0]{sum}, 3);
 is(scalar @{$entries->[3]{values}[0]{values}}, 1);
-
 
 done_testing;

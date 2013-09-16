@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use Data::Dumper;
 
-our $VERSION = "0.02";
+our $VERSION = "0.03";
 
 require Exporter;
 our @ISA = qw/Exporter/;
@@ -15,6 +15,8 @@ sub new {
     my %opt = @_;
 
     return bless {
+        keyname => "key",
+        valname => "values",
         keys => [],
         rollups => [],
         tree => {},
@@ -26,6 +28,22 @@ sub nest {
     my %opt = @_;
 
     my $self = new Data::Nest(%opt);
+    $self;
+}
+
+sub keyname {
+    my $self = shift;
+    my $keyname = shift;
+    return $self->{keyname} unless($keyname);
+    $self->{keyname} = $keyname;
+    $self;
+}
+
+sub valname {
+    my $self = shift;
+    my $valname = shift;
+    return $self->{valname} unless($valname);
+    $self->{valname} = $valname;
     $self;
 }
 
@@ -63,10 +81,9 @@ sub _entries {
 
     foreach my $k (sort keys %map){
         my $values = $self->_entries($map{$k}, $depth+1);
-        my $obj = {
-            key => $k,
-            values => $values,
-        };
+        my $obj = {};
+        $obj->{$self->{keyname}} = $k;
+        $obj->{$self->{valname}} = $values;
         if($depth + 1 >= scalar @{$self->{keys}}){
             foreach my $roll (@{$self->{rollups}}){
                 $obj->{$roll->{name}} = $roll->{func}(@$values);

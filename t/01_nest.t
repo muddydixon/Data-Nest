@@ -204,4 +204,65 @@ is($entries->[3]{values}[0]{sumsq}, 9);
 is($entries->[3]{values}[0]{sum}, 3);
 is(scalar @{$entries->[3]{values}[0]{values}}, 1);
 
+# no values
+$entries = nest(noValues => 1)->key('userid')->key('itemid')->rollup('sum',
+                                         sub {
+                                             my @data = @_;
+                                             my $sum = 0;
+                                             foreach my $d (@data){
+                                                 $sum += $d->{quantity};
+                                             }
+                                             $sum;
+                                         })->rollup('sumsq',
+                                         sub {
+                                             my @data = @_;
+                                             my $sum = 0;
+                                             foreach my $d (@data){
+                                                 $sum += $d->{quantity} * $d->{quantity};
+                                             }
+                                             $sum;
+                                         })->entries($sample);
+
+is(scalar @{$entries}, 4);
+
+is($entries->[0]{key}, 1);
+is(scalar @{$entries->[0]{values}}, 3);
+is($entries->[0]{values}[0]{key}, 1);
+is($entries->[0]{values}[0]{sumsq}, 9);
+is($entries->[0]{values}[0]{sum}, 3);
+ok(!exists $entries->[0]{values}[0]{values});
+is($entries->[0]{values}[1]{key}, 2);
+is($entries->[0]{values}[1]{sumsq}, 13);
+is($entries->[0]{values}[1]{sum}, 5);
+ok(!exists $entries->[0]{values}[1]{values});
+is($entries->[0]{values}[2]{key}, 3);
+is($entries->[0]{values}[2]{sumsq}, 9);
+is($entries->[0]{values}[2]{sum}, 3);
+ok(!exists $entries->[0]{values}[2]{values});
+
+is($entries->[1]{key}, 2);
+is(scalar @{$entries->[1]{values}}, 2);
+is($entries->[1]{values}[0]{key}, 2);
+is($entries->[1]{values}[0]{sumsq}, 9);
+is($entries->[1]{values}[0]{sum}, 3);
+ok(!exists $entries->[1]{values}[0]{values});
+is($entries->[1]{values}[1]{key}, 4);
+is($entries->[1]{values}[1]{sumsq}, 10);
+is($entries->[1]{values}[1]{sum}, 4);
+ok(!exists $entries->[1]{values}[1]{values});
+
+is($entries->[2]{key}, 3);
+is(scalar @{$entries->[2]{values}}, 2);
+is($entries->[2]{values}[0]{key}, 1);
+is($entries->[2]{values}[0]{sumsq}, 9);
+is($entries->[2]{values}[0]{sum}, 3);
+ok(!exists $entries->[2]{values}[0]{values});
+
+is($entries->[3]{key}, 4);
+is(scalar @{$entries->[3]{values}}, 1);
+is($entries->[3]{values}[0]{key}, 2);
+is($entries->[3]{values}[0]{sumsq}, 9);
+is($entries->[3]{values}[0]{sum}, 3);
+ok(!exists $entries->[3]{values}[0]{values});
+
 done_testing;

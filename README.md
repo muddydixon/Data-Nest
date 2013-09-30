@@ -1,10 +1,12 @@
 # NAME
 
-Data::Nest - It's new $module
+Data::Nest - nest array of hash easily. and calculate optional measurements corresponding to results of nest.
 
 # SYNOPSIS
 
     use Data::Nest;
+
+    my $nest =
 
 # DESCRIPTION
 

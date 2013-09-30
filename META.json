@@ -1,5 +1,5 @@
 {
-   "abstract" : "It's new $module",
+   "abstract" : "nest array of hash easily. and calculate optional measurements corresponding to results of nest.",
    "author" : [
       "muddydixon <muddydixon@gmail.com>"
    ],
